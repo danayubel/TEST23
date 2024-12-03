@@ -1,0 +1,173 @@
+Organizations:
+  - &Buyer
+    Name: BuyerMSP
+    ID: BuyerMSP
+    MSPDir: ../crypto-config/peerOrganizations/buyer.etsi.com/msp
+    AnchorPeers:
+      - Host: peer0.buyer.etsi.com
+        Port: 7051
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('BuyerMSP.admin', 'BuyerMSP.peer', 'BuyerMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('BuyerMSP.admin', 'BuyerMSP.client', 'BuyerMSP.peer')"
+      Admins:
+        Type: Signature
+        Rule: "OR('BuyerMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('BuyerMSP.peer')"
+
+  - &Seller
+    Name: SellerMSP
+    ID: SellerMSP
+    MSPDir: ../crypto-config/peerOrganizations/seller.etsi.com/msp
+    AnchorPeers:
+      - Host: peer0.seller.etsi.com
+        Port: 8051
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('SellerMSP.admin', 'SellerMSP.peer', 'SellerMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('SellerMSP.admin', 'SellerMSP.client', 'SellerMSP.peer')"
+      Admins:
+        Type: Signature
+        Rule: "OR('SellerMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('SellerMSP.peer')"
+
+  - &Client
+    Name: ClientMSP
+    ID: ClientMSP
+    MSPDir: ../crypto-config/peerOrganizations/client.etsi.com/msp
+    AnchorPeers:
+      - Host: peer0.client.etsi.com
+        Port: 9051
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('ClientMSP.admin', 'ClientMSP.peer', 'ClientMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('ClientMSP.admin', 'ClientMSP.client', 'ClientMSP.peer')"
+      Admins:
+        Type: Signature
+        Rule: "OR('ClientMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('ClientMSP.peer')"
+
+  - &OrdererOrg
+    Name: OrdererMSP
+    ID: OrdererMSP
+    MSPDir: ../crypto-config/ordererOrganizations/etsi.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.admin', 'OrdererMSP.orderer')"
+      Writers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.admin', 'OrdererMSP.orderer')"
+      Admins:
+        Type: Signature
+        Rule: "OR('OrdererMSP.admin')"
+
+Orderer: &OrdererDefaults
+  OrdererType: etcdraft
+  EtcdRaft:
+    Consenters:
+      - Host: orderer1.etsi.com
+        Port: 7050
+        ClientTLSCert: ../crypto-config/ordererOrganizations/etsi.com/orderers/orderer1.etsi.com/tls/server.crt
+        ServerTLSCert: ../crypto-config/ordererOrganizations/etsi.com/orderers/orderer1.etsi.com/tls/server.crt
+      - Host: orderer2.etsi.com
+        Port: 8050
+        ClientTLSCert: ../crypto-config/ordererOrganizations/etsi.com/orderers/orderer2.etsi.com/tls/server.crt
+        ServerTLSCert: ../crypto-config/ordererOrganizations/etsi.com/orderers/orderer2.etsi.com/tls/server.crt
+      - Host: orderer3.etsi.com
+        Port: 9050
+        ClientTLSCert: ../crypto-config/ordererOrganizations/etsi.com/orderers/orderer3.etsi.com/tls/server.crt
+        ServerTLSCert: ../crypto-config/ordererOrganizations/etsi.com/orderers/orderer3.etsi.com/tls/server.crt
+
+  Addresses:
+    - orderer1.etsi.com:7050
+    - orderer2.etsi.com:8050
+    - orderer3.etsi.com:9050
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+  Capabilities:
+    V2_0: true
+
+Channel: &ChannelDefaults
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+  Capabilities:
+    V2_0: true
+
+Application: &ApplicationDefaults
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+  Capabilities:
+    V2_0: true
+
+Profiles:
+  OrdererGenesis:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+        - *OrdererOrg
+    Consortiums:
+      SampleConsortium:
+        Organizations:
+          - *Buyer
+          - *Seller
+          - *Client
+
+  ChannelConfig:
+    <<: *ChannelDefaults
+    Consortium: SampleConsortium
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Buyer
+        - *Seller
+        - *Client

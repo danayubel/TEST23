@@ -1,0 +1,80 @@
+# Configuración específica para peer0 de client.etsi.com
+peer:
+  id: peer0.client.etsi.com
+  networkId: dev
+  address: peer0.client.etsi.com:9051
+  localMspId: ClientMSP
+
+  # Configuración del TLS
+  tls:
+    enabled: true
+    cert:
+      file: /home/daniel/TFGP/crypto-config/peerOrganizations/client.etsi.com/peers/peer0.client.etsi.com/tls/server.crt
+    key:
+      file: /home/daniel/TFGP/crypto-config/peerOrganizations/client.etsi.com/peers/peer0.client.etsi.com/tls/server.key
+    rootcert:
+      file: /home/daniel/TFGP/crypto-config/peerOrganizations/client.etsi.com/peers/peer0.client.etsi.com/tls/ca.crt
+
+  # Configuración de los Endorsement Plugins
+  endorsement:
+    plugin: escc
+    pluginMapping:
+      "": escc
+
+  # Configuración del Event Service (para recibir eventos desde el peer)
+  deliveryclient:
+    reconnectTotalTimeThreshold: 3600s
+    connTimeout: 2s
+    reConnectBackoffThreshold: 5.0s
+
+# Configuración del Peer en cuanto a los libros contables (ledger)
+ledger:
+  blockchain:
+    pvtdataStore:
+      subdir: "ledger"
+
+# Configuración del File System Path
+fileSystemPath: /var/hyperledger/production
+
+# Configuración de la ruta de MSP
+mspConfigPath: /home/daniel/TFGP/crypto-config/peerOrganizations/client.etsi.com/peers/peer0.client.etsi.com/msp
+
+# Configuración de la variable MSP
+msp:
+  type: bccsp
+  bccsp:
+    Default: SW
+    SW:
+      Hash: SHA2
+      Security: 256
+
+# Habilitar la comunicación gossip para la propagación de los bloques
+peer.gossip:
+  bootstrap: peer0.client.etsi.com:9051
+  useLeaderElection: true
+  orgLeader: false
+  maxBlockCountToStore: 100
+
+# Direcciones de Orderers conocidos
+peer.deliveryclient.addressOverrides:
+  - from: localhost:7050
+    to: orderer1.etsi.com:7050
+    caCertsFile: /home/daniel/TFGP/crypto-config/ordererOrganizations/etsi.com/orderers/orderer1.etsi.com/tls/ca.crt
+
+# Configuración para la base de datos de nivel de mundo (state database)
+state:
+  database: CouchDB
+  couchDBConfig:
+    address: localhost:5984
+    username: ""
+    password: ""
+    maxRetries: 3
+    requestTimeout: 35s
+
+# Configuración del nivel de log para diferentes componentes
+logging:
+  level: info
+  gossip: warning
+  cauthdsl: warning
+  policy: warning
+  grpc: error

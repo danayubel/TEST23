@@ -1,0 +1,31 @@
+OrdererOrgs:
+  - Name: etsi
+    Domain: etsi.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer1
+      - Hostname: orderer2
+      - Hostname: orderer3
+
+PeerOrgs:
+  - Name: buyer
+    Domain: buyer.etsi.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      Count: 2
+  - Name: seller
+    Domain: seller.etsi.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      Count: 2
+  - Name: client
+    Domain: client.etsi.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      Count: 2
