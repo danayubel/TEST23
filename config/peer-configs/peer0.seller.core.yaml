@@ -1,8 +1,8 @@
-# Configuración específica para peer0 de seller.etsi.com
+# peer0.seller.core.yaml
 peer:
   id: peer0.seller.etsi.com
   networkId: dev
-  address: peer0.seller.etsi.com:10051
+  address: peer0.seller.etsi.com:8051
   localMspId: SellerMSP
 
   # Configuración del TLS
@@ -21,13 +21,13 @@ peer:
     pluginMapping:
       "": escc
 
-  # Configuración del Event Service (para recibir eventos desde el peer)
+  # Configuración del Event Service
   deliveryclient:
     reconnectTotalTimeThreshold: 3600s
     connTimeout: 2s
     reConnectBackoffThreshold: 5.0s
 
-# Configuración del Peer en cuanto a los libros contables (ledger)
+# Configuración del Peer en cuanto a los libros contables
 ledger:
   blockchain:
     pvtdataStore:
@@ -47,9 +47,9 @@ msp:
       Hash: SHA2
       Security: 256
 
-# Habilitar la comunicación gossip para la propagación de los bloques
+# Habilitar la comunicación gossip
 peer.gossip:
-  bootstrap: peer0.seller.etsi.com:10051
+  bootstrap: peer0.seller.etsi.com:8051
   useLeaderElection: true
   orgLeader: false
   maxBlockCountToStore: 100
@@ -60,13 +60,13 @@ peer.deliveryclient.addressOverrides:
     to: orderer1.etsi.com:7050
     caCertsFile: /home/daniel/TFGP/crypto-config/ordererOrganizations/etsi.com/orderers/orderer1.etsi.com/tls/ca.crt
 
-# Configuración para la base de datos de nivel de mundo (state database)
+# Configuración para la base de datos de nivel de mundo
 state:
   database: CouchDB
   couchDBConfig:
-    address: localhost:5984
-    username: ""
-    password: ""
+    address: couchdb0:5984
+    username: "admin"
+    password: "adminpw"
     maxRetries: 3
     requestTimeout: 35s
 
