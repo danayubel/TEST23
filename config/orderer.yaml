@@ -9,11 +9,16 @@ General:
       - /var/hyperledger/orderer/tls/ca.crt
     ClientAuthRequired: false
   Cluster:
+    ListenAddress: 0.0.0.0
     ListenPort: 7051
     ServerCertificate: /var/hyperledger/orderer/tls/server.crt
     ServerPrivateKey: /var/hyperledger/orderer/tls/server.key
     ClientCertificate: /var/hyperledger/orderer/tls/server.crt
     ClientPrivateKey: /var/hyperledger/orderer/tls/server.key
+    RootCAs:
+      - /var/hyperledger/orderer/tls/ca.crt
+
+  
 
 FileLedger:
   Location: /var/hyperledger/production/orderer

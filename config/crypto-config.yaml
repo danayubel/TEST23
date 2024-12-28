@@ -6,6 +6,13 @@ OrdererOrgs:
       - Hostname: orderer1
       - Hostname: orderer2
       - Hostname: orderer3
+    CA:
+      Country: US
+      Province: California
+      Locality: San Francisco
+      OrganizationalUnit: Orderer
+      StreetAddress: 1 Main Street
+      PostalCode: 94111
 
 PeerOrgs:
   - Name: buyer
@@ -15,6 +22,14 @@ PeerOrgs:
       Count: 1
     Users:
       Count: 2
+    CA:
+      Country: US
+      Province: California
+      Locality: San Francisco
+      OrganizationalUnit: Buyer
+      StreetAddress: 2 Buyer Lane
+      PostalCode: 94111
+
   - Name: seller
     Domain: seller.etsi.com
     EnableNodeOUs: true
@@ -22,6 +37,14 @@ PeerOrgs:
       Count: 1
     Users:
       Count: 2
+    CA:
+      Country: US
+      Province: California
+      Locality: San Francisco
+      OrganizationalUnit: Seller
+      StreetAddress: 3 Seller Drive
+      PostalCode: 94111
+
   - Name: client
     Domain: client.etsi.com
     EnableNodeOUs: true
@@ -29,3 +52,10 @@ PeerOrgs:
       Count: 1
     Users:
       Count: 2
+    CA:
+      Country: US
+      Province: California
+      Locality: San Francisco
+      OrganizationalUnit: Client
+      StreetAddress: 4 Client Avenue
+      PostalCode: 94111

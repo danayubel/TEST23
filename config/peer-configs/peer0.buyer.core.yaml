@@ -1,44 +1,38 @@
-# peer0.buyer.core.yaml
 peer:
   id: peer0.buyer.etsi.com
   networkId: dev
   address: peer0.buyer.etsi.com:7051
   localMspId: BuyerMSP
 
-  # Configuración del TLS
   tls:
     enabled: true
     cert:
-      file: /home/daniel/TFGP/crypto-config/peerOrganizations/buyer.etsi.com/peers/peer0.buyer.etsi.com/tls/server.crt
+      file: /etc/hyperledger/fabric/tls/server.crt
     key:
-      file: /home/daniel/TFGP/crypto-config/peerOrganizations/buyer.etsi.com/peers/peer0.buyer.etsi.com/tls/server.key
+      file: /etc/hyperledger/fabric/tls/server.key
     rootcert:
-      file: /home/daniel/TFGP/crypto-config/peerOrganizations/buyer.etsi.com/peers/peer0.buyer.etsi.com/tls/ca.crt
+      file: /etc/hyperledger/fabric/tls/ca.crt
 
-  # Configuración de los Endorsement Plugins
   endorsement:
     plugin: escc
     pluginMapping:
       "": escc
 
-  # Configuración del Event Service
   deliveryclient:
     reconnectTotalTimeThreshold: 3600s
     connTimeout: 2s
     reConnectBackoffThreshold: 5.0s
 
-# Configuración del Peer en cuanto a los libros contables
 ledger:
   blockchain:
-    pvtdataStore:
-      subdir: "ledger"
+    rootDir: /var/hyperledger/production
+  snapshots:
+    rootDir: /var/hyperledger/production/snapshots
 
-# Configuración del File System Path
 fileSystemPath: /var/hyperledger/production
 
-mspConfigPath: /home/daniel/TFGP/crypto-config/peerOrganizations/buyer.etsi.com/peers/peer0.buyer.etsi.com/msp
+mspConfigPath: /etc/hyperledger/fabric/msp
 
-# Configuración de la variable MSP
 msp:
   type: bccsp
   bccsp:
@@ -47,20 +41,17 @@ msp:
       Hash: SHA2
       Security: 256
 
-# Habilitar la comunicación gossip
 peer.gossip:
   bootstrap: peer0.buyer.etsi.com:7051
   useLeaderElection: true
   orgLeader: false
   maxBlockCountToStore: 100
 
-# Direcciones de Orderers conocidos
 peer.deliveryclient.addressOverrides:
   - from: localhost:7050
     to: orderer1.etsi.com:7050
-    caCertsFile: /home/daniel/TFGP/crypto-config/ordererOrganizations/etsi.com/orderers/orderer1.etsi.com/tls/ca.crt
+    caCertsFile: /etc/hyperledger/fabric/tls/ca.crt
 
-# Configuración para la base de datos de nivel de mundo
 state:
   database: CouchDB
   couchDBConfig:
@@ -71,9 +62,8 @@ state:
     requestTimeout: 35s
 
 logging:
-  level: info
+  level: DEBUG
   gossip: warning
   cauthdsl: warning
   policy: warning
   grpc: error
-

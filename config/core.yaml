@@ -1,0 +1,47 @@
+peer:
+  id: peer0.generic
+  networkId: dev
+  address: localhost:7051
+  localMspId: GenericMSP
+
+  tls:
+    enabled: true
+    cert:
+      file: /etc/hyperledger/fabric/tls/server.crt
+    key:
+      file: /etc/hyperledger/fabric/tls/server.key
+    rootcert:
+      file: /etc/hyperledger/fabric/tls/ca.crt
+
+  endorsement:
+    plugin: escc
+
+ledger:
+  blockchain:
+    rootDir: /var/hyperledger/production
+  snapshots:
+    rootDir: /var/hyperledger/production/snapshots
+
+fileSystemPath: /var/hyperledger/production
+
+mspConfigPath: /etc/hyperledger/fabric/msp
+
+msp:
+  type: bccsp
+  bccsp:
+    Default: SW
+    SW:
+      Hash: SHA2
+      Security: 256
+
+logging:
+  level: INFO
+
+state:
+  database: CouchDB
+  couchDBConfig:
+    address: couchdb0:5984
+    username: "admin"
+    password: "adminpw"
+    maxRetries: 3
+    requestTimeout: 35s

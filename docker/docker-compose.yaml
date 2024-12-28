@@ -80,16 +80,19 @@ services:
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
-      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_PEER_TLS_ROOTCERT_FILE:/etc/hyperledger/fabric/tls/ca.crt:/etc/hyperledger/fabric/tls/orderer-tlsca.crt
       - CORE_PEER_ID=peer0.buyer.etsi.com
       - CORE_PEER_ADDRESS=peer0.buyer.etsi.com:7051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
       - CORE_PEER_CHAINCODEADDRESS=peer0.buyer.etsi.com:7052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_LOCALMSPID=BuyerMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
     volumes:
       - ../crypto-config/peerOrganizations/buyer.etsi.com/peers/peer0.buyer.etsi.com/msp:/etc/hyperledger/fabric/msp
       - ../crypto-config/peerOrganizations/buyer.etsi.com/peers/peer0.buyer.etsi.com/tls:/etc/hyperledger/fabric/tls
       - ../config/peer-configs/peer0.buyer.core.yaml:/etc/hyperledger/fabric/core.yaml
+      - /home/daniel/TFGP/ledgersData:/var/hyperledger/production
       - /var/run/:/host/var/run/
     ports:
       - "7051:7051"
@@ -105,16 +108,19 @@ services:
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
-      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_PEER_TLS_ROOTCERT_FILE:/etc/hyperledger/fabric/tls/ca.crt:/etc/hyperledger/fabric/tls/orderer-tlsca.crt
       - CORE_PEER_ID=peer0.seller.etsi.com
       - CORE_PEER_ADDRESS=peer0.seller.etsi.com:8051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
       - CORE_PEER_CHAINCODEADDRESS=peer0.seller.etsi.com:8052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052
+      - CORE_PEER_LOCALMSPID=SellerMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
     volumes:
       - ../crypto-config/peerOrganizations/seller.etsi.com/peers/peer0.seller.etsi.com/msp:/etc/hyperledger/fabric/msp
       - ../crypto-config/peerOrganizations/seller.etsi.com/peers/peer0.seller.etsi.com/tls:/etc/hyperledger/fabric/tls
       - ../config/peer-configs/peer0.seller.core.yaml:/etc/hyperledger/fabric/core.yaml
+      - /home/daniel/TFGP/ledgersData:/var/hyperledger/production
       - /var/run/:/host/var/run/
     ports:
       - "8051:8051"
@@ -130,21 +136,25 @@ services:
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
-      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_PEER_TLS_ROOTCERT_FILE:/etc/hyperledger/fabric/tls/ca.crt:/etc/hyperledger/fabric/tls/orderer-tlsca.crt
       - CORE_PEER_ID=peer0.client.etsi.com
       - CORE_PEER_ADDRESS=peer0.client.etsi.com:9051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
       - CORE_PEER_CHAINCODEADDRESS=peer0.client.etsi.com:9052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
+      - CORE_PEER_LOCALMSPID=ClientMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
     volumes:
       - ../crypto-config/peerOrganizations/client.etsi.com/peers/peer0.client.etsi.com/msp:/etc/hyperledger/fabric/msp
       - ../crypto-config/peerOrganizations/client.etsi.com/peers/peer0.client.etsi.com/tls:/etc/hyperledger/fabric/tls
       - ../config/peer-configs/peer0.client.core.yaml:/etc/hyperledger/fabric/core.yaml
+      - /home/daniel/TFGP/ledgersData:/var/hyperledger/production
       - /var/run/:/host/var/run/
     ports:
       - "9051:9051"
     networks:
       - etsi-network
+
 
   couchdb0:
     container_name: couchdb0
@@ -177,5 +187,10 @@ services:
     command: /bin/bash
     volumes:
       - ../crypto-config:/etc/hyperledger/fabric/crypto-config
-      - ../channel-artifacts:/var/hyperledger/channel-artifacts
-      - ../chaincode:/opt/gopath/src/github.com
+      - ../channel-artifacts:/etc/hyperledger/fabric/channel-artifacts
+      - ../chaincode:/opt/gopath/src/github.com/
+      - ../crypto-config/peerOrganizations/buyer.etsi.com/peers/peer0.buyer.etsi.com/tls:/etc/hyperledger/fabric/tls
+      - ../crypto-config/peerOrganizations/buyer.etsi.com/users/Admin@buyer.etsi.com/msp:/etc/hyperledger/fabric/msp
+      - ../crypto-config/ordererOrganizations/etsi.com/orderers:/etc/hyperledger/fabric/orderer-tls      
+    networks:
+      - etsi-network
